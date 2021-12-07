@@ -1,14 +1,14 @@
 const Koa = require('koa');
 const path = require('path');
-const onerror = require('koa-onerror');
 const koaBody = require('koa-body');
 const json = require('koa-json');
-const logger = require('koa-logger');
-const routers = require('./routers/router')
+const routers = require('./routers/router');
+const { logger, accessLogger } = require('./utils/logger');
+const responseFormatter = require('./middlewares/response');
+const config = require('./configs/config');
+const initDb = require('./helpers/db')
 
 const app = new Koa();
-
-onerror(app);
 
 app.use(koaBody({
   multipart: true,
@@ -25,11 +25,18 @@ app.use(koaBody({
 
 app.use(json());
 
-app.use(logger());
+app.use(accessLogger());
 
-// routers
-app.use(routers.routes()).use(routers.allowedMethods())
+app.on('error', err => {
+  logger.error(err);
+});
 
-app.listen(3000, () => {
-    console.log("app started at port 3000...");
+app.use(responseFormatter(config.apiPrefix));
+
+app.use(routers.routes()).use(routers.allowedMethods());
+
+initDb().then(() => {
+	app.listen(config.port, () => {
+		console.log(`app started at port ${config.port}...`);
+	});
 });
