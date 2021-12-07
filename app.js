@@ -8,6 +8,7 @@ const responseFormatter = require('./middlewares/response');
 const config = require('./configs/config');
 const initDb = require('./helpers/db')
 
+
 const app = new Koa();
 
 app.use(koaBody({
@@ -31,7 +32,7 @@ app.on('error', err => {
   logger.error(err);
 });
 
-app.use(responseFormatter(config.apiPrefix));
+//app.use(responseFormatter(config.apiPrefix));
 
 app.use(routers.routes()).use(routers.allowedMethods());
 
