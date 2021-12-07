@@ -36,8 +36,8 @@ app.on('error', err => {
 
 app.use(routers.routes()).use(routers.allowedMethods());
 
-initDb().then(() => {
+//initDb().then(() => {
 	app.listen(config.port, () => {
 		console.log(`app started at port ${config.port}...`);
 	});
-});
+//});

@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const router = require('koa-router')();
-const http = require("http")
+const https = require("https")
+const superagent = require('superagent');
 
 router.get('/:filename', async (ctx) => {
   //const fpath = path.join(__dirname, `/../public/1.png`);
@@ -9,12 +10,22 @@ router.get('/:filename', async (ctx) => {
   //ctx.response.type = path.extname(ctx.path);
   //ctx.response.status = 200;
 
-http.get('http://www.baidu.com', (res) => {
-  console.log(`Got response: ${res.statusCode}`);
-  console.log(`Got response: ${res}`);
-}).on('error', (e) => {
-  console.log(`Got error: ${e.message}`);
-});
+    await (async () => {
+  try {
+    //const res = await superagent.get('https://www.google.com/images/srpr/logo11w.png');
+    const res = await superagent.get('https://hatrabbits.com/wp-content/uploads/2018/10/risky-assumptions.jpg');
+    console.log('Status Code:', res.statusCode);
+
+    const png = res.body;
+    ctx.response.body = res.body;
+    ctx.response.status = 200;
+    ctx.response.type = res.type;
+    //ctx.response.type = '.png';
+  } catch (err) {
+    console.log(err.message);
+  }
+})();
+
   //var options = {
   //  url: 'https://www.google.com/images/srpr/logo11w.png',
   //  method: 'GET',
