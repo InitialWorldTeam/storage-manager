@@ -1,14 +1,9 @@
 const File = require('../models/file.js')
 
 module.exports = {
-  add: async(ctx, next) => {
-      return await Image.create({name: 1})
+  uploadFile: async(ctx, next) => {
   },
-  query: async(ctx, next) => {
-    ctx.body = `2`
+  queryUrl: async(ctx, next) => {
   },
-  : async(ctx, next) => {
-    ctx.body = `3`
-  }
 }
 

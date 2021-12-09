@@ -18,8 +18,6 @@ app.use(koaBody({
     keepExtensions: true,
     maxFieldsSize: 2 * 1024 * 1024,
     onFileBegin: (name, file) => {
-      console.log(`name: ${name}`);
-      console.log(file);
     },
   },
 }));
@@ -36,8 +34,8 @@ app.on('error', err => {
 
 app.use(routers.routes()).use(routers.allowedMethods());
 
-//initDb().then(() => {
+initDb().then(() => {
 	app.listen(config.port, () => {
 		console.log(`app started at port ${config.port}...`);
 	});
-//});
+});

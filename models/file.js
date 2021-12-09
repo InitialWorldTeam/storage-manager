@@ -5,11 +5,14 @@ const FileSchema = new Schema({
 		type: String,
 		required: true
 	},
+	type : {
+		type: String,
+	},
     ipfs : {
-        type: string,
-    }
-    s3 : {
-        type:string,
+        type: String,
+    },
+    oss : {
+        type: String,
     }
 }, { timestamps: true })
 
