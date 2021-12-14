@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/InitialCat/storage-manager#readme",
   "dependencies": {
+    "@pinata/sdk": "^1.1.23",
     "ali-oss": "^6.16.0",
     "fs": "0.0.1-security",
     "http": "0.0.1-security",

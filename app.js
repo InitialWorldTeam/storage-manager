@@ -7,6 +7,7 @@ const { logger, accessLogger } = require('./utils/logger');
 const responseFormatter = require('./middlewares/response');
 const config = require('./configs/config');
 const initDb = require('./helpers/db')
+const {pinataInit} = require('./helpers/pinata')
 
 
 const app = new Koa();
@@ -34,8 +35,11 @@ app.on('error', err => {
 
 app.use(routers.routes()).use(routers.allowedMethods());
 
+pinataInit().then(() => {
+console.log("initPinata success");
 initDb().then(() => {
+	console.log("initDB success");
 	app.listen(config.port, () => {
 		console.log(`app started at port ${config.port}...`);
 	});
-});
+})});

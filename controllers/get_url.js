@@ -3,6 +3,7 @@ const path = require('path');
 const config = require('../configs/config');
 const { logger, accessLogger } = require('../utils/logger');
 const fctrl= require('../helpers/dbhelper');
+const {pinataFile} = require('../helpers/pinata');
 const OSS = require('ali-oss');
 
 
@@ -27,7 +28,11 @@ module.exports = {
 		//const ret = await fctrl.add(file.name, file.type, result.name);
 		const ret = await fctrl.add(file.name, file.type, result.url);
 		console.log(ret)
+
+		const res2 = await pinataFile(file.path)
+		console.log(res2)
 	  }
+	
 	ctx.response.status = 200;
   },
   queryUrl: async(ctx, next) => {
