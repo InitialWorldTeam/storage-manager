@@ -1,6 +1,6 @@
 const fs = require('fs')
 const pinataSDK = require('@pinata/sdk');
-const pinata = pinataSDK('e504c8c11bb2a1b91574', '0cfc8c7ff69e930770a04c0b0bb88ed964c862b94fc2fe178e35f441375b7120');
+const pinata = pinataSDK(process.env.pinataAPI, process.env.pinataSec);
 
 function pinataInit() {
 	return new Promise((resolve, reject) => {
@@ -14,12 +14,12 @@ function pinataInit() {
 	})
 }
 
-async function pinataFile(path) {
-	const readableStreamForFile = fs.createReadStream(path);
+async function pinataFile(file) {
+	const readableStreamForFile = fs.createReadStream(file.path);
 
 	const options = {
 		pinataMetadata: {
-			name: "TODO",
+			name: file.name,
 		},
 		pinataOptions: {
 			cidVersion: 1
@@ -27,7 +27,7 @@ async function pinataFile(path) {
 	};
 
 	let res = await pinata.pinFileToIPFS(readableStreamForFile, options)
-	console.log(res)
+    return res;
 }
 
 module.exports.pinataInit = pinataInit;

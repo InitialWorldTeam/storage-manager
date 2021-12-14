@@ -3,12 +3,15 @@ const fs = require("fs")
 const path = require("path")
 
 class FileController {
-	async add(name, type, oss) {
+	async add(name, type, ipfs_url, external_url, external_type) {
 	//async add(name, signedhash, unsignedhash, path, tag) {
 		let e = {
 			name: name,
+            description: "test",
 			type: type,
-			oss: oss
+			ipfs_url: ipfs_url,
+            external_url: ext_url,
+            external_type: ext_type,
 		}
 		return await Files.create(e)
 	}

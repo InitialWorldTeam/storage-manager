@@ -9,30 +9,23 @@ const OSS = require('ali-oss');
 
 const client = new OSS({
     region: config.aliRegion,
-    accessKeyId: config.aliAccessKeyId,
-    accessKeySecret: config.aliAccessKeySec,
+    accessKeyId: process.env.aliAccessKeyId,
+    accessKeySecret: process.env.aliAccessKeySec,
 	bucket: config.aliBucket
 });
 
 module.exports = {
   uploadFile: async(ctx, next) => {
-	console.log("hahahaha")
 	const files = ctx.request.files;
 	for(let key in files) {
 		let file = files[key]
-		console.log(file.name)
-		console.log(file.type)
 		const stream = fs.createReadStream(file.path);
 		let result = await client.putStream('test/'+file.name, stream);
-		console.log(result.name);
-		//const ret = await fctrl.add(file.name, file.type, result.name);
-		const ret = await fctrl.add(file.name, file.type, result.url);
+		const res = await pinataFile(file)
+		const ret = await fctrl.add(file.name, file.type, `ipfs.io/ipfs/${res.IpfsHash}` ,result.url, "oss");
 		console.log(ret)
-
-		const res2 = await pinataFile(file.path)
-		console.log(res2)
 	  }
-	
+
 	ctx.response.status = 200;
   },
   queryUrl: async(ctx, next) => {

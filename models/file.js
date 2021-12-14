@@ -5,13 +5,19 @@ const FileSchema = new Schema({
 		type: String,
 		required: true
 	},
-	type : {
-		type: String,
-	},
-    ipfs : {
+    description: {
         type: String,
     },
-    oss : {
+	filetype : {
+		type: String,
+	},
+    ipfs_url : {
+        type: String,
+    },
+    external_url : {
+        type: String,
+    },
+    external_type: {
         type: String,
     }
 }, { timestamps: true })
