@@ -35,14 +35,24 @@ module.exports = {
 
 			break;
 		}
-
-		const res3 = await fctrl.findByIpfsID(ipfsUrlHash)
-		console.log(res3)
-
 	},
 	queryUrl: async(ctx, next) => {
 		try {
 			ipfsUrlHash = sha1(ctx.params.ipfsid)
+			console.log(ipfsUrlHash)
+			const res = await fctrl.findByIpfsID(ipfsUrlHash)
+			console.log(res)
+			ctx.response.body = JSON.stringify(res[0])
+			ctx.response.status = 200
+		} catch (err) {
+			logger.error(err);
+			ctx.response.status = 401
+		}
+	},
+
+	queryUrlRpc: async(ctx, next) => {
+		try {
+			ipfsUrlHash = sha1(ctx.request.body.ipfs_url)
 			console.log(ipfsUrlHash)
 			const res = await fctrl.findByIpfsID(ipfsUrlHash)
 			console.log(res)
