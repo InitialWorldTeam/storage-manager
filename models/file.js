@@ -24,6 +24,9 @@ const FileSchema = new Schema({
     },
     external_type: {
         type: String,
+    },
+    local_url: {
+        type: String,
     }
 }, { timestamps: true })
 

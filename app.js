@@ -7,11 +7,16 @@ const { logger, accessLogger } = require('./utils/logger');
 const responseFormatter = require('./middlewares/response');
 const config = require('./configs/config');
 const initDb = require('./helpers/db')
+const koaStatic = require('koa-static')
 const {pinataInit} = require('./helpers/pinata')
 
 
 
 const app = new Koa();
+
+app.use(koaStatic(
+	path.join(__dirname, 'public')
+))
 
 app.use(koaBody({
   multipart: true,

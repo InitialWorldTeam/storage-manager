@@ -3,7 +3,7 @@ const fs = require("fs")
 const path = require("path")
 
 class FileController {
-	async add(name, type, ipfs_url, ipfs_idhash, external_url, external_type) {
+	async add(name, type, ipfs_url, ipfs_idhash, external_url, external_type, local_url) {
 		let e = {
 			name: name,
             description: "test",
@@ -12,6 +12,7 @@ class FileController {
 			ipfs_idhash: ipfs_idhash,
             external_url: external_url,
             external_type: external_type,
+            local_url: local_url
 		}
 		return await Files.create(e)
 	}
