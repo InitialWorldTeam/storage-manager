@@ -3,15 +3,15 @@ const fs = require("fs")
 const path = require("path")
 
 class FileController {
-	async add(name, type, ipfs_url, external_url, external_type) {
-	//async add(name, signedhash, unsignedhash, path, tag) {
+	async add(name, type, ipfs_url, ipfs_idhash, external_url, external_type) {
 		let e = {
 			name: name,
             description: "test",
 			type: type,
 			ipfs_url: ipfs_url,
-            external_url: ext_url,
-            external_type: ext_type,
+			ipfs_idhash: ipfs_idhash,
+            external_url: external_url,
+            external_type: external_type,
 		}
 		return await Files.create(e)
 	}
@@ -22,6 +22,10 @@ class FileController {
 
 	async findById(id) {
 		return await Files.findById(id)
+	}
+
+	async findByIpfsID(id) {
+		return await Files.find({ipfs_idhash: id})
 	}
 
 	async findByName(fn) {
