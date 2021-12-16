@@ -7,7 +7,8 @@ const client = new OSS({
     region: config.aliRegion,
     accessKeyId: process.env.aliAccessKeyId,
     accessKeySecret: process.env.aliAccessKeySec,
-	bucket: config.aliBucket
+	bucket: config.aliBucket,
+	timeout: 300
 });
 
 exports.ossFile = async function (file) {
