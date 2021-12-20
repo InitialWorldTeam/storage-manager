@@ -1,4 +1,5 @@
-const fs = require('fs')
+const fs = require('fs');
+const path = require('path');
 const pinataSDK = require('@pinata/sdk');
 const pinata = pinataSDK(process.env.pinataAPI, process.env.pinataSec);
 
@@ -30,5 +31,22 @@ async function pinataFile(file) {
     return res;
 }
 
+async function pinataFolder(dirname, path) {
+	const options = {
+		pinataMetadata: {
+			name: dirname,
+		},
+		pinataOptions: {
+			cidVersion: 1
+		}
+	};
+
+	let res = await pinata.pinFromFS(path, options);
+
+	return res;
+}
+
+
 module.exports.pinataInit = pinataInit;
 module.exports.pinataFile = pinataFile;
+module.exports.pinataFolder = pinataFolder;
