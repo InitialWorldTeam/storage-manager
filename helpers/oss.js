@@ -14,7 +14,7 @@ const client = new OSS({
 
 exports.ossFile = async function (file) {
 	const stream = fs.createReadStream(file.path);
-	let result = await client.putStream('test/'+file.name, stream);
+	let result = await client.putStream('test/'+file.name, stream); //TODO test?
 	return result;
 };
 
@@ -27,10 +27,6 @@ function getAllFiles(dirPath, originalPath, originalPath2, arrayOfFiles) {
   originalPath2 = originalPath2 || path.resolve(dirPath, ".")
 
   folder = path.relative(originalPath, path.join(dirPath, "/"))
-
-  //arrayOfFiles.push({
-  //    path: folder.replace(/\\/g, "/"),
-  //})
 
   files.forEach(function (file) {
       if (fs.statSync(dirPath + "/" + file).isDirectory()) {
