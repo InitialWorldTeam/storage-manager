@@ -13,7 +13,8 @@ const FileSchema = new Schema({
 	},
     ipfs_idhash : {
         type: String,
-		required: true
+		required: true,
+		unique: true
     },
     ipfs_url : {
         type: String,

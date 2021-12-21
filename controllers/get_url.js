@@ -19,9 +19,16 @@ module.exports = {
         for(let key in files) {
             let file = files[key]
             const res = await pinataFile(file)
+			//TODO ret error handle
             ipfsUrlHash = sha1(`ipfs://ipfs/${res.IpfsHash}`)
             const res2 = await ossFile(file)
-            const ret = await fctrl.add(file.name, file.type, `ipfs://ipfs/${res.IpfsHash}` ,ipfsUrlHash, res2.url, "oss", '/upload/' + path.basename(file.path));
+			//TODO ret error handle
+
+            const res3 = await fctrl.findByIpfsID(ipfsUrlHash)
+			if(res3.length == 0){
+				const ret = await fctrl.add(file.name, file.type, `ipfs://ipfs/${res.IpfsHash}` ,ipfsUrlHash, res2.url, "oss", '/upload/' + path.basename(file.path));
+				//TODO ret error handle
+			}
             ctx.response.body = JSON.stringify({
                 code: '0000',
                 msg: "success",
@@ -42,7 +49,7 @@ module.exports = {
             ipfsUrlHash = sha1(ctx.params.ipfsid)
             const res = await fctrl.findByIpfsID(ipfsUrlHash)
             ctx.response.body = JSON.stringify({
-                code: '0000',
+                code: '0000',       //TODO code list
                 msg: "success",
                 data: {
                     external_url: res[0].external_url,
@@ -60,7 +67,15 @@ module.exports = {
         try {
             ipfsUrlHash = sha1(ctx.request.body.ipfs_url)
             const res = await fctrl.findByIpfsID(ipfsUrlHash)
-            //ctx.response.body = JSON.stringify(res[0])
+			if(res.length == 0){
+				ctx.response.body = JSON.stringify({
+					code: '0001',
+					msg: "not found",
+					data: {
+					}
+				})
+				ctx.response.status = 200
+			} else {
             ctx.response.body = JSON.stringify({
                 code: '0000',
                 msg: "success",
@@ -70,9 +85,16 @@ module.exports = {
                 }
             })
             ctx.response.status = 200
+			}
         } catch (err) {
             logger.error(err);
-            ctx.response.status = 401
+			ctx.response.body = JSON.stringify({
+				code: '0002',
+				msg: "error",
+				data: {
+				}
+			})
+			ctx.response.status = 200
         }
     },
 
@@ -80,12 +102,15 @@ module.exports = {
         let fpath = path.join(__dirname, `../public/upload/${ctx.header.folder}`)
 
         let files = await ossFolder(fpath);
+			//TODO ret error handle
         let res = await pinataFolder(ctx.header.folder,fpath);
+			//TODO ret error handle
         let results = []
         for (file of files) {
             let ipfsurl = `ipfs://ipfs/${res.IpfsHash}/${file.folder}`
             ipfsUrlHash = sha1(ipfsurl)
             const ret = await fctrl.add(file.name, "NULL", ipfsurl, ipfsUrlHash, file.url, "NULL", `upload/${file.fname}`);
+			//TODO ret error handle
 
             results.push({
                 name: file.name,
