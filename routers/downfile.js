@@ -2,7 +2,7 @@ const router = require('koa-router')();
 const config = require('../configs/config');
 const fs= require('fs');
 const OSS = require('ali-oss');
-const { logger, accessLogger } = require('../utils/logger');
+const { logger, accessLogger } = require('../helpers/logger');
 
 
 const client = new OSS({

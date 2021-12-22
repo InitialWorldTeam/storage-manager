@@ -1,7 +1,7 @@
 const fs= require('fs');
 const path = require('path');
 const config = require('../configs/config');
-const { logger, accessLogger } = require('../utils/logger');
+const { logger, accessLogger } = require('../helpers/logger');
 const fctrl= require('../helpers/dbhelper');
 const {pinataFile, pinataFolder} = require('../helpers/pinata');
 const {ossFile, ossFolder} = require('../helpers/oss');
