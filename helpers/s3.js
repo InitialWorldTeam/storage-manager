@@ -3,21 +3,25 @@ const fs = require('fs');
 const path = require('path');
 
 AWS.config.update({
-	accessKeyId: process.env.awsAPI,
-	secretAccessKey: process.env.awsSec"
+	region:	'ap-southeast-1',
+	accessKeyId: process.env.awsAccessKeyId,
+	secretAccessKey: process.env.awsAccessKeySec
 });
 
 const s3 = new AWS.S3();
 
 exports.s3File = async function (file) {
 	let params = {
-		Bucket: 'test',
-		Key : "test/"+path.basename(file) //TODO test?
+		Bucket: 'noel-testing',
+		Key : "test/"+path.basename(file), //TODO test?
 		Body : fs.createReadStream(file),
 	};
 
-	let result = await s3.upload(params);
-	return result;
+	console.log(process.env.awsAccessKeyId);
+	console.log(process.env.awsAccessKeySec);
+	//let result = await s3.listBuckets().promise();
+	let result = await s3.upload(params).promise();
+	return {url:result.Location};
 };
 
 function getAllFiles(dirPath, originalPath, originalPath2, arrayOfFiles) {
@@ -53,21 +57,20 @@ exports.s3Folder = async function (dirPath) {
 	results = []
 	files = getAllFiles(dirPath)
 	for (const file of files) {
-		const stream = fs.createReadStream(file.path);
-
 		let params = {
-			Bucket: 'test',
-			Key : file.folder+path.basename(file.filename)
-			Body : fs.createReadStream(file),
+			Bucket: 'noel-testing',
+			Key : file.folder,
+			Body : fs.createReadStream(file.path)
 		};
 
-		let res = await s3.upload(params);
+		let res = await s3.upload(params).promise()
 		results.push({
 			name: file.filename,
 			folder: file.folder3,
 			fname: file.folder,
-			url:res.url,
+			url:res.Location,
 		})
+
 	}
 
 	return results

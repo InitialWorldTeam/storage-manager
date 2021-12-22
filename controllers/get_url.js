@@ -5,6 +5,7 @@ const { logger, accessLogger } = require('../utils/logger');
 const fctrl= require('../helpers/dbhelper');
 const {pinataFile, pinataFolder} = require('../helpers/pinata');
 const {ossFile, ossFolder} = require('../helpers/oss');
+const {s3File, s3Folder} = require('../helpers/s3');
 const crypto = require('crypto')
 
 function sha1(msg) {
@@ -19,16 +20,17 @@ module.exports = {
         for(let key in files) {
             let file = files[key]
             const res = await pinataFile(file)
-			//TODO ret error handle
+            //TODO ret error handle
             ipfsUrlHash = sha1(`ipfs://ipfs/${res.IpfsHash}`)
-            const res2 = await ossFile(file)
-			//TODO ret error handle
+            //const res2 = await ossFile(file)
+            const res2 = await s3File(file.path)
+            //TODO ret error handle
 
             const res3 = await fctrl.findByIpfsID(ipfsUrlHash)
-			if(res3.length == 0){
-				const ret = await fctrl.add(file.name, file.type, `ipfs://ipfs/${res.IpfsHash}` ,ipfsUrlHash, res2.url, "oss", '/upload/' + path.basename(file.path));
-				//TODO ret error handle
-			}
+            if(res3.length == 0){
+                const ret = await fctrl.add(file.name, file.type, `ipfs://ipfs/${res.IpfsHash}` ,ipfsUrlHash, res2.url, "oss", '/upload/' + path.basename(file.path));
+                //TODO ret error handle
+            }
             ctx.response.body = JSON.stringify({
                 code: '0000',
                 msg: "success",
@@ -67,15 +69,15 @@ module.exports = {
         try {
             ipfsUrlHash = sha1(ctx.request.body.ipfs_url)
             const res = await fctrl.findByIpfsID(ipfsUrlHash)
-			if(res.length == 0){
-				ctx.response.body = JSON.stringify({
-					code: '0001',
-					msg: "not found",
-					data: {
-					}
-				})
-				ctx.response.status = 200
-			} else {
+            if(res.length == 0){
+                ctx.response.body = JSON.stringify({
+                    code: '0001',
+                    msg: "not found",
+                    data: {
+                    }
+                })
+                ctx.response.status = 200
+            } else {
             ctx.response.body = JSON.stringify({
                 code: '0000',
                 msg: "success",
@@ -85,32 +87,33 @@ module.exports = {
                 }
             })
             ctx.response.status = 200
-			}
+            }
         } catch (err) {
             logger.error(err);
-			ctx.response.body = JSON.stringify({
-				code: '0002',
-				msg: "error",
-				data: {
-				}
-			})
-			ctx.response.status = 200
+            ctx.response.body = JSON.stringify({
+                code: '0002',
+                msg: "error",
+                data: {
+                }
+            })
+            ctx.response.status = 200
         }
     },
 
     uploadFolder: async(ctx, next) => {
         let fpath = path.join(__dirname, `../public/upload/${ctx.header.folder}`)
 
-        let files = await ossFolder(fpath);
-			//TODO ret error handle
+        //let files = await ossFolder(fpath);
+        let files = await s3Folder(fpath);
+            //TODO ret error handle
         let res = await pinataFolder(ctx.header.folder,fpath);
-			//TODO ret error handle
+            //TODO ret error handle
         let results = []
         for (file of files) {
             let ipfsurl = `ipfs://ipfs/${res.IpfsHash}/${file.folder}`
             ipfsUrlHash = sha1(ipfsurl)
             const ret = await fctrl.add(file.name, "NULL", ipfsurl, ipfsUrlHash, file.url, "NULL", `upload/${file.fname}`);
-			//TODO ret error handle
+            //TODO ret error handle
 
             results.push({
                 name: file.name,
