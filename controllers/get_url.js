@@ -5,6 +5,7 @@ const { logger, accessLogger } = require('../utils/logger');
 const fctrl= require('../helpers/dbhelper');
 const {pinataFile, pinataFolder} = require('../helpers/pinata');
 const {ossFile, ossFolder} = require('../helpers/oss');
+const {s3File, s3Folder} = require('../helpers/s3');
 const crypto = require('crypto')
 
 function sha1(msg) {
@@ -21,7 +22,8 @@ module.exports = {
             const res = await pinataFile(file)
 			//TODO ret error handle
             ipfsUrlHash = sha1(`ipfs://ipfs/${res.IpfsHash}`)
-            const res2 = await ossFile(file)
+            //const res2 = await ossFile(file)
+            const res2 = await s3File(file.path)
 			//TODO ret error handle
 
             const res3 = await fctrl.findByIpfsID(ipfsUrlHash)
