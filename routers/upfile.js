@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-const {uploadFile} = require('../controllers/get_url')
+const {uploadFile} = require('../controllers/handle_req')
 
 router.post('/', async (ctx, next) => {
 	await uploadFile(ctx, next)

@@ -1,26 +1,26 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
 const path = require('path');
+const config = require('../configs/config');
 
 AWS.config.update({
-	region:	'ap-southeast-1',
-	accessKeyId: process.env.awsAccessKeyId,
-	secretAccessKey: process.env.awsAccessKeySec
+	region:	config.s3Region,
+	accessKeyId: config.s3AccessKeyId,
+	secretAccessKey: config.s3AccessKeySec
 });
 
 const s3 = new AWS.S3();
 
 exports.s3File = async function (file) {
 	let params = {
-		Bucket: 'noel-testing',
-		Key : "test/"+path.basename(file), //TODO test?
+		Bucket: config.s3Bucket,
+		Key : config.s3Folder + '/' + path.basename(file),
 		Body : fs.createReadStream(file),
 	};
 
-	console.log(process.env.awsAccessKeyId);
-	console.log(process.env.awsAccessKeySec);
-	//let result = await s3.listBuckets().promise();
-	let result = await s3.upload(params).promise();
+	let result = await s3.upload(params).promise().catch((err)=>{
+		throw new Error(err)
+	});
 	return {url:result.Location};
 };
 
@@ -63,7 +63,10 @@ exports.s3Folder = async function (dirPath) {
 			Body : fs.createReadStream(file.path)
 		};
 
-		let res = await s3.upload(params).promise()
+		let res = await s3.upload(params).promise().catch((err)=>{
+			throw new Error(err)
+		});
+
 		results.push({
 			name: file.filename,
 			folder: file.folder3,

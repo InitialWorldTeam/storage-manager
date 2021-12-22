@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const config = require('../configs/config');
 const pinataSDK = require('@pinata/sdk');
-const pinata = pinataSDK(process.env.pinataAPI, process.env.pinataSec);
+const pinata = pinataSDK(config.pinataAPI, config.pinataSec);
 
 function pinataInit() {
 	return new Promise((resolve, reject) => {
@@ -27,7 +28,9 @@ async function pinataFile(file) {
 		}
 	};
 
-	let res = await pinata.pinFileToIPFS(readableStreamForFile, options)
+	let res = await pinata.pinFileToIPFS(readableStreamForFile, options).catch((err)=>{
+		throw new Error(err);
+	})
     return res;
 }
 
@@ -41,7 +44,9 @@ async function pinataFolder(dirname, path) {
 		}
 	};
 
-	let res = await pinata.pinFromFS(path, options);
+	let res = await pinata.pinFromFS(path, options).catch((err)=>{
+		throw new Error(err);
+	});
 
 	return res;
 }

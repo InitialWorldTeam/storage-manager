@@ -6,15 +6,17 @@ const path= require('path');
 
 const client = new OSS({
     region: config.aliRegion,
-    accessKeyId: process.env.aliAccessKeyId,
-    accessKeySecret: process.env.aliAccessKeySec,
+    accessKeyId: config.aliAccessKeyId,
+    accessKeySecret: config.aliAccessKeySec,
 	bucket: config.aliBucket,
 	timeout: 300
 });
 
 exports.ossFile = async function (file) {
 	const stream = fs.createReadStream(file.path);
-	let result = await client.putStream('test/'+file.name, stream); //TODO test?
+	let result = await client.putStream(config.aliFolder + '/' +file.name, stream).catch((err)=>{
+		throw new Error(err)
+	});
 	return result;
 };
 
@@ -52,7 +54,9 @@ exports.ossFolder = async function (dirPath) {
     files = getAllFiles(dirPath)
     for (const file of files) {
         const stream = fs.createReadStream(file.path);
-        let res = await client.putStream(file.folder, stream);
+        let res = await client.putStream(file.folder, stream).catch((err)=>{
+			throw new Error(err)
+		});
         results.push({
             name: file.filename,
             folder: file.folder3,

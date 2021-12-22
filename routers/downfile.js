@@ -7,8 +7,8 @@ const { logger, accessLogger } = require('../utils/logger');
 
 const client = new OSS({
     region: config.aliRegion,
-    accessKeyId: process.env.aliAccessKeyId,
-    accessKeySecret: process.env.aliAccessKeySec,
+    accessKeyId: config.aliAccessKeyId,
+    accessKeySecret: config.aliAccessKeySec,
 	bucket: config.aliBucket
 });
 

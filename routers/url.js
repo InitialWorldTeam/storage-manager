@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-const {queryUrl, queryUrlRpc} = require('../controllers/get_url')
+const {queryUrl, queryUrlRpc} = require('../controllers/handle_req')
 
 
 router.post('/', async (ctx, next) => {

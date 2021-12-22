@@ -13,6 +13,7 @@ const {pinataInit} = require('./helpers/pinata')
 
 
 
+
 const app = new Koa();
 
 app.use(koaStatic(
@@ -34,8 +35,8 @@ app.use(koaBody({
 		file.path = `${dir}/${file.name}`
 
 		onError: (error) => {
-			app.status = 400;
-			app.body = {code:400, msg:"upload failed", data:{}}
+			app.status = 200;
+			app.body = JSON.stringfy({code:"0001", msg:"upload failed", data:{}});
 			return;
 		}
 	},
@@ -50,7 +51,6 @@ app.on('error', err => {
   logger.error(err);
 });
 
-//app.use(responseFormatter(config.apiPrefix));
 
 app.use(routers.routes()).use(routers.allowedMethods());
 
