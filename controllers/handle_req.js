@@ -34,12 +34,29 @@ module.exports = {
 				return
 			}
 
-			ipfsUrlHash = sha1(`ipfs://ipfs/${res.IpfsHash}`)
+			let ipfsUrl = `ipfs://ipfs/${res.IpfsHash}`
+			ipfsUrlHash = sha1(ipfsUrl)
 
-			//const res2 = await ossFile(file).catch((err)=>{
+			const res3 = await fctrl.findByIpfsID(ipfsUrlHash)
+			if(res3.length != 0){
+				ctx.response.body = JSON.stringify({
+					code: '0000',
+					msg: "success",
+					data: {
+						name: res3[0].name,
+						ifps_url: res3[0].ipfs_url,
+						external_url: res3[0].external_url,
+						local_url: res3[0].local_url 
+					}
+				})
+				ctx.response.status = 200
+				return;
+			}
+
+			//const res2 = await ossFile(res.IpfsHash, file).catch((err)=>{
 			//    isError = true;
 			//})
-			const res2 = await s3File(file.path).catch((err)=>{
+			const res2 = await s3File(res.IpfsHash, file.path).catch((err)=>{
 				isError = true;
 			})
 
@@ -53,29 +70,35 @@ module.exports = {
 				return
 			}
 
-			const res3 = await fctrl.findByIpfsID(ipfsUrlHash)
-			if(res3.length == 0){
-				const ret = await fctrl.add(file.name, file.type, `ipfs://ipfs/${res.IpfsHash}` ,ipfsUrlHash, res2.url, "oss", '/upload/' + path.basename(file.path)).catch((err)=>{
-					isError = true;
+			let localNewDir = path.join(__dirname, `../public/upload/${res.IpfsHash}`)
+
+			if (!fs.existsSync(localNewDir)) {
+				fs.mkdirSync(localNewDir, { recursive: true });
+			}
+
+			fs.renameSync(file.path, `${localNewDir}/${path.basename(file.path)}`);
+	
+			let localUrl = `/upload/${res.IpfsHash}/` + path.basename(file.path);
+			const ret = await fctrl.add(file.name, file.type, ipfsUrl,ipfsUrlHash, res2.url, "NULL", localUrl).catch((err)=>{
+				isError = true;
+			});
+			if (isError == true) {
+				ctx.response.body = JSON.stringify({
+					code: '0004',
+					msg: "pin index to db error",
+					data: {}
 				});
-				if (isError == true) {
-					ctx.response.body = JSON.stringify({
-						code: '0004',
-						msg: "pin index to db error",
-						data: {}
-					});
-					ctx.response.status = 200;
-					return
-				}
+				ctx.response.status = 200;
+				return
 			}
 			ctx.response.body = JSON.stringify({
 				code: '0000',
 				msg: "success",
 				data: {
 					name: file.name,
-					ifps_url: `ipfs://ipfs/${res.IpfsHash}`,
+					ifps_url: ipfsUrl,
 					external_url: res2.url,
-					local_url: '/upload/' + path.basename(file.path)
+					local_url: localUrl
 				}
 			});
 			ctx.response.status = 200;
@@ -145,23 +168,6 @@ module.exports = {
 		let isError = false;
 		let fpath = path.join(__dirname, `../public/upload/${ctx.header.folder}`)
 
-		//let files = await ossFolder(fpath).catch((err)=>{
-		//    isError = true;
-		//};
-		let files = await s3Folder(fpath).catch((err)=>{
-			isError = true;
-		})
-
-		if (isError == true) {
-			ctx.response.body = JSON.stringify({
-				code: '0003',
-				msg: "pin file to file store error",
-				data: {}
-			});
-			ctx.response.status = 200;
-			return
-		}
-
 		let res = await pinataFolder(ctx.header.folder,fpath).catch((err)=>{
 			console.log(err)
 			isError = true;
@@ -177,11 +183,51 @@ module.exports = {
 			return
 		}
 
+
+		//let files = await ossFolder(res.IpfsHash, fpath).catch((err)=>{
+		//    isError = true;
+		//};
+		let files = await s3Folder(res.IpfsHash, fpath).catch((err)=>{
+			isError = true;
+		})
+
+		if (isError == true) {
+			ctx.response.body = JSON.stringify({
+				code: '0003',
+				msg: "pin file to file store error",
+				data: {}
+			});
+			ctx.response.status = 200;
+			return
+		}
+
+		localNewDir = path.join(__dirname, `../public/upload/${res.IpfsHash}`)
+
+		if (!fs.existsSync(localNewDir)) {
+			fs.mkdirSync(localNewDir, { recursive: true });
+		}
+
+		fs.renameSync(fpath, localNewDir)
+
 		let results = []
 		for (file of files) {
-			let ipfsurl = `ipfs://ipfs/${res.IpfsHash}/${file.folder}`
-			ipfsUrlHash = sha1(ipfsurl)
-			const ret = await fctrl.add(file.name, "NULL", ipfsurl, ipfsUrlHash, file.url, "NULL", `upload/${file.fname}`).catch((err)=>{
+			let ipfsUrl = `ipfs://ipfs/${res.IpfsHash}/${file.folder}`
+			ipfsUrlHash = sha1(ipfsUrl)
+
+
+			const res3 = await fctrl.findByIpfsID(ipfsUrlHash)
+			if(res3.length != 0){
+				results.push({
+					name: res3[0].name,
+					ifps_url: res3[0].ipfs_url,
+					external_url: res3[0].external_url,
+					local_url: res3[0].local_url 
+				})
+				continue;
+			}
+
+			let localUrl = `upload/${res.IpfsHash}/${file.folder}`
+			const ret = await fctrl.add(file.name, "NULL", ipfsUrl, ipfsUrlHash, file.url, "NULL", localUrl).catch((err)=>{
 				isError = true;
 			});
 			if (isError == true) {
@@ -197,9 +243,9 @@ module.exports = {
 
 			results.push({
 				name: file.name,
-				ifps_url: ipfsurl,
+				ifps_url: ipfsUrl,
 				external_url: file.url,
-				local_url: `upload/${file.fname}`
+				local_url: localUrl
 			})
 		}
 

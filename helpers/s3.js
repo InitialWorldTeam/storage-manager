@@ -11,10 +11,10 @@ AWS.config.update({
 
 const s3 = new AWS.S3();
 
-exports.s3File = async function (file) {
+exports.s3File = async function (root, file) {
 	let params = {
 		Bucket: config.s3Bucket,
-		Key : config.s3Folder + '/' + path.basename(file),
+		Key : root + '/' + path.basename(file),
 		Body : fs.createReadStream(file),
 	};
 
@@ -53,13 +53,14 @@ function getAllFiles(dirPath, originalPath, originalPath2, arrayOfFiles) {
 	return arrayOfFiles
 };
 
-exports.s3Folder = async function (dirPath) {
+exports.s3Folder = async function (root, dirPath) {
 	results = []
 	files = getAllFiles(dirPath)
 	for (const file of files) {
+		console.log(file);
 		let params = {
 			Bucket: 'noel-testing',
-			Key : file.folder,
+			Key : root+'/'+file.folder3,
 			Body : fs.createReadStream(file.path)
 		};
 
@@ -76,5 +77,6 @@ exports.s3Folder = async function (dirPath) {
 
 	}
 
+	console.log(results);
 	return results
 };

@@ -12,9 +12,9 @@ const client = new OSS({
 	timeout: 300
 });
 
-exports.ossFile = async function (file) {
+exports.ossFile = async function (root, file) {
 	const stream = fs.createReadStream(file.path);
-	let result = await client.putStream(config.aliFolder + '/' +file.name, stream).catch((err)=>{
+	let result = await client.putStream(root + '/' +file.name, stream).catch((err)=>{
 		throw new Error(err)
 	});
 	return result;
@@ -49,12 +49,12 @@ function getAllFiles(dirPath, originalPath, originalPath2, arrayOfFiles) {
 
   return arrayOfFiles
 }
-exports.ossFolder = async function (dirPath) {
+exports.ossFolder = async function (root, dirPath) {
     results = []
     files = getAllFiles(dirPath)
     for (const file of files) {
         const stream = fs.createReadStream(file.path);
-        let res = await client.putStream(file.folder, stream).catch((err)=>{
+        let res = await client.putStream(root + '/' + file.folder3, stream).catch((err)=>{
 			throw new Error(err)
 		});
         results.push({
