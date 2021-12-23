@@ -34,4 +34,5 @@ response:
 {code:'0004', msg: "pin index to db error", data: {} }
 {code:'0005', msg: "file is not existed", data: {} }
 {code:'0006', msg: "interal error", data: {} }
+{code:'0007', msg: "Authentication failed", data: {} }
 ```

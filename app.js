@@ -36,7 +36,7 @@ app.use(koaBody({
 
 		onError: (error) => {
 			app.status = 200;
-			app.body = JSON.stringfy({code:"0001", msg:"upload failed", data:{}});
+			app.body = JSON.stringify({code:"0001", msg:"upload failed", data:{}});
 			return;
 		}
 	},

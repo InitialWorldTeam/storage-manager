@@ -14,5 +14,7 @@ module.exports = {
   s3Bucket: process.env.s3Bucket,
   s3Folder: process.env.s3Folder,
   s3AccessKeyId: process.env.s3AccessKeyId,
-  s3AccessKeySec: process.env.s3AccessKeySec
+  s3AccessKeySec: process.env.s3AccessKeySec,
+  jwtSec: process.env.jwtSec,
+  jwtPass: process.env.jwtPass
 };
