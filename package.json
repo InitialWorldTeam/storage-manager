@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node app.js",
     "test": "node app.js",
-	"pm2": "pm2 start pm2_config.json"
+    "pm2": "pm2 start pm2_config.json"
   },
   "repository": {
     "type": "git",
@@ -25,9 +25,11 @@
     "fs": "0.0.1-security",
     "http": "0.0.1-security",
     "https": "^1.0.0",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.4",
     "koa-body": "^4.2.0",
     "koa-json": "^2.0.2",
+    "koa-jwt": "^4.0.3",
     "koa-log4": "^2.3.2",
     "koa-router": "^10.1.1",
     "koa-send": "^5.0.1",

@@ -2,7 +2,7 @@
   "apps" : [{
 	"name": "storage-manager",
     "script": "app.js",
-	"cwd": "./", 
+	"cwd": "./",
 	"instances": 1,
 	"watch": false,
 	"env" : {
@@ -18,7 +18,9 @@
 		"s3Bucket": "",
 		"s3Folder": "",
 		"s3AccessKeyId" : "",
-		"s3AccessKeySec": ""
+		"s3AccessKeySec": "",
+        "jwtPass":"",
+        "jwtSec":""
 	}
   }]
 }
