@@ -22,10 +22,14 @@ app.use(koaStatic(
 
 app.use(koaBody({
   multipart: true,
+  formLimit:"1000mb",
+  jsonLimit:"1000mb",
+  testLimit:"1000mb",
   formidable: {
 	uploadDir: path.join(__dirname, 'public/upload/'),
 	keepExtensions: true,
-	maxFieldsSize: 20 * 1024 * 1024,
+	maxFields: 1024*1024*1024,
+	maxFieldsSize: 2000 * 1024 * 1024,
 	onFileBegin: (name, file) => {
 		const dirName = name;
 		const dir = path.join(__dirname, `public/upload/${dirName}`);

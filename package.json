@@ -22,6 +22,7 @@
     "@pinata/sdk": "^1.1.23",
     "ali-oss": "^6.16.0",
     "aws-sdk": "^2.1048.0",
+    "del": "^6.0.0",
     "fs": "0.0.1-security",
     "http": "0.0.1-security",
     "https": "^1.0.0",

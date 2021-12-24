@@ -57,7 +57,6 @@ exports.s3Folder = async function (root, dirPath) {
 	results = []
 	files = getAllFiles(dirPath)
 	for (const file of files) {
-		console.log(file);
 		let params = {
 			Bucket: 'noel-testing',
 			Key : root+'/'+file.folder3,
@@ -77,6 +76,5 @@ exports.s3Folder = async function (root, dirPath) {
 
 	}
 
-	console.log(results);
 	return results
 };

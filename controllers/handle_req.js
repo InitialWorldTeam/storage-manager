@@ -7,6 +7,7 @@ const {pinataFile, pinataFolder} = require('../helpers/pinata');
 const {ossFile, ossFolder} = require('../helpers/oss');
 const {s3File, s3Folder} = require('../helpers/s3');
 const crypto = require('crypto')
+const del = require('del');
 
 function sha1(msg) {
 	const shasum = crypto.createHash('sha1')
@@ -203,8 +204,8 @@ module.exports = {
 
 		localNewDir = path.join(__dirname, `../public/upload/${res.IpfsHash}`)
 
-		if (!fs.existsSync(localNewDir)) {
-			fs.mkdirSync(localNewDir, { recursive: true });
+		if (fs.existsSync(localNewDir)) {
+            await del(localNewDir);
 		}
 
 		fs.renameSync(fpath, localNewDir)
@@ -221,7 +222,7 @@ module.exports = {
 					name: res3[0].name,
 					ifps_url: res3[0].ipfs_url,
 					external_url: res3[0].external_url,
-					local_url: res3[0].local_url 
+					local_url: res3[0].local_url
 				})
 				continue;
 			}
