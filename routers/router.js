@@ -1,17 +1,43 @@
 const router = require('koa-router')();
+const config = require('../configs/config');
 const url = require('./url');
 const upfile = require('./upfile');
 const upfolder= require('./upfolder');
-const downfile = require('./downfile');
 const login = require('./login');
-const config = require('../configs/config');
+const jwt = require('../middlewares/jwt');
 
-router.prefix(config.apiPrefix);
+function emptyMiddleWare(ctx, next) {
+	next();
+};
 
-router.use('/urls', url.routes(), url.allowedMethods());
-router.use('/files', upfile.routes(), upfile.allowedMethods());
-router.use('/folder', upfolder.routes(), upfolder.allowedMethods());
-router.use('/login', login.routes(), login.allowedMethods());
-//router.use('/files', downfile.routes(), downfile.allowedMethods());
+const routers = [
+	{
+		path:   config.apiPrefix + '/login',
+		method: 'post',
+		middleware : emptyMiddleWare,
+		action: login
+	}, {
+		path:   config.apiPrefix + '/files',
+		method: 'post',
+		middleware : jwt,
+		action: upfile
+	}, {
+		path:   config.apiPrefix + '/folder',
+		method: 'post',
+		middleware: jwt,
+		action: upfolder
+	}, {
+		path:   config.apiPrefix + '/urls',
+		method: 'post',
+		middleware : emptyMiddleWare,
+		action: url
+	}
+];
 
-module.exports = router;
+module.exports = function() {
+	for (let i in routers) {
+		r = routers[i];
+		router[r.method](r.path, r.middleware, r.action);
+	}
+	return router;
+};
