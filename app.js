@@ -10,11 +10,25 @@ const config = require('./configs/config');
 const initDb = require('./helpers/db')
 const koaStatic = require('koa-static')
 const {pinataInit} = require('./helpers/pinata')
+const cors = require('koa2-cors')
 
 
 
 
 const app = new Koa();
+app.use(cors({
+	origin: function (ctx) {
+		return ctx.header.origin;
+	},
+	maxAge: 0,
+	credentials: true,
+	allowMethods: ['GET', 'POST', 'DELETE', 'PUT', 'OPTIONS'],
+	allowHeaders: ['Cookie', 'Origin', 'X-Requested-With', 'Content-Type',
+		'i-msg-type', 'Accept', 'X-Auth-Token', 'X-Auth-DEVICE',
+		'Authorization', 'x-requested-with', 'cache-control', 'X-Requested-With',
+		'Access-Control-Allow-Origin', 'Access-Control-Allow-Credentials']
+
+}))
 
 app.use(koaStatic(
 	path.join(__dirname, 'public')
