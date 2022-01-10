@@ -18,6 +18,6 @@ module.exports = {
 	s3Folder: "",
 	s3AccessKeyId: "",
 	s3AccessKeySec: "",
-	jwtSec: "123456",
-	jwtPass: "abcdefg"
+	jwtPass: "123456",
+	jwtSec: "abcdefg"
 }
