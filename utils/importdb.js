@@ -4,7 +4,7 @@ const initDb = require('../helpers/db')
 const config = require('../configs/config');
 const fctrl= require('../helpers/dbhelper');
 const {pinataInit, pinataFile, pinataFolder}= require('../helpers/pinata');
-const {ossFolder}= require('../helpers/oss');
+//const {ossFolder}= require('../helpers/oss');
 const crypto = require('crypto')
 
 

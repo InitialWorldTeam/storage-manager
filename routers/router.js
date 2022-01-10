@@ -2,7 +2,7 @@ const router = require('koa-router')();
 const url = require('./url');
 const upfile = require('./upfile');
 const upfolder= require('./upfolder');
-const downfile = require('./downfile');
+//const downfile = require('./downfile');
 const login = require('./login');
 const config = require('../configs/config');
 

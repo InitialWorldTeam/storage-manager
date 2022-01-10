@@ -4,7 +4,7 @@ const config = require('../configs/config');
 const { logger, accessLogger } = require('../helpers/logger');
 const fctrl= require('../helpers/dbhelper');
 const {pinataFile, pinataFolder} = require('../helpers/pinata');
-const {ossFile, ossFolder} = require('../helpers/oss');
+//const {ossFile, ossFolder} = require('../helpers/oss');
 const {s3File, s3Folder} = require('../helpers/s3');
 const crypto = require('crypto')
 const del = require('del');
@@ -19,7 +19,7 @@ module.exports = {
 	uploadFile: async(ctx, next) => {
 		let isError = false;
 		const files = ctx.request.files;
-		for(let key in files) {
+		for(let key in files) { //why loop??
 			let file = files[key]
 			const res = await pinataFile(file).catch((err)=>{
 				isError = true;

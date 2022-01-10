@@ -58,12 +58,13 @@ exports.s3Folder = async function (root, dirPath) {
 	files = getAllFiles(dirPath)
 	for (const file of files) {
 		let params = {
-			Bucket: 'noel-testing',
+			Bucket: config.s3Bucket,
 			Key : root+'/'+file.folder3,
 			Body : fs.createReadStream(file.path)
 		};
 
 		let res = await s3.upload(params).promise().catch((err)=>{
+			console.log(err);
 			throw new Error(err)
 		});
 
