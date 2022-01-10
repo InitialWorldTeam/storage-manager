@@ -1,7 +1,7 @@
 const fs= require('fs');
 const path = require('path');
 const initDb = require('../helpers/db')
-const config = require('../configs/config');
+const config = require('../config/index.js');
 const fctrl= require('../helpers/dbhelper');
 const {pinataInit, pinataFile, pinataFolder}= require('../helpers/pinata');
 //const {ossFolder}= require('../helpers/oss');

@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const config = require('../configs/config');
+const config = require('../config/index.js');
 
 module.exports = function (ctx, next) {
 	// should use sha1(jwtPass) to compare

@@ -1,6 +1,6 @@
 const fs= require('fs');
 const path = require('path');
-const config = require('../configs/config');
+const config = require('../config/index.js');
 const { logger, accessLogger } = require('../helpers/logger');
 const fctrl= require('../helpers/dbhelper');
 const {pinataFile, pinataFolder} = require('../helpers/pinata');

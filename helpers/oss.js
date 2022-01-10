@@ -1,5 +1,5 @@
 const OSS = require('ali-oss');
-const config = require('../configs/config');
+const config = require('../config/index.js');
 const fs= require('fs');
 const path= require('path');
 

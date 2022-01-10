@@ -4,7 +4,7 @@ const upfile = require('./upfile');
 const upfolder= require('./upfolder');
 //const downfile = require('./downfile');
 const login = require('./login');
-const config = require('../configs/config');
+const config = require('../config/index.js');
 
 router.prefix(config.apiPrefix);
 

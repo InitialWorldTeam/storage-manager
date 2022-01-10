@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const config = require('../configs/config');
+const config = require('../config/index.js');
 const pinataSDK = require('@pinata/sdk');
 const pinata = pinataSDK(config.pinataAPI, config.pinataSec);
 

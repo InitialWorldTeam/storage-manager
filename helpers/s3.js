@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
 const path = require('path');
-const config = require('../configs/config');
+const config = require('../config/index.js');
 
 AWS.config.update({
 	region:	config.s3Region,

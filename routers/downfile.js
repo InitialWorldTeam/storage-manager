@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-const config = require('../configs/config');
+const config = require('../config/index.js');
 const fs= require('fs');
 const OSS = require('ali-oss');
 const { logger, accessLogger } = require('../helpers/logger');

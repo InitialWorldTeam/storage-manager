@@ -14,3 +14,9 @@ yarn-error.log*
 .idea
 
 /public
+/config/default.js
+/config/test.js
+/config/development.js
+/config/production.js
+
+/logs
