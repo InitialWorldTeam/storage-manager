@@ -3,7 +3,7 @@
 //rename this file to default.js, test.js, development.js or production.js
 
 module.exports = {
-	port: 30000,
+	port: 29080,
 	apiPrefix: '/api/v1',
 	database: 'mongodb://localhost:27017/test',
 	pinataAPI: "" ,
